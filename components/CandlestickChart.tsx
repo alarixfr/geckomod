@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from "react";
+import { useRef, useState, useTransition } from "react";
+import { PERIOD_BUTTONS } from "@/constants";
+import { IChartApi, ISeriesApi } from "lightweight-charts";
 
 const CandlestickChart = ({
   children,
@@ -9,8 +11,54 @@ const CandlestickChart = ({
   height = 360,
   initialPeriod = 'daily',
 }: CandlestickChartProps) => {
-  const [loading, setLoading] = useState(false);
+  const chartContainer = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
+  const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   
+  const [loading, setLoading] = useState(false);
+  const [period, setPeriod] = useState(initialPeriod);
+  const [ohlcData, setOhlcData] = useState<OHLCData[]>(data ?? []);
+  const [isPending, startTransition] = useTransition();
+  
+  const fetchOHLCData = async (selectedPeriod: Period) => {
+    try {
+      const { days, interval } = PERIOD_CONFIG[selectedPeriod];
+      
+      const newData = await fetcher<OHLCData[]>('/coins/${coinId}/ohlc', {
+        vs_currency: 'usd',
+        days,
+        interval,
+        precision: 'full',
+      });
+
+      setOhlcData(newData ?? []);
+    } catch (e) {
+      console.error('Failed to fetch OHLCData', e);
+    }
+  }
+  
+  const handlePeriodChange = (newPeriod: Period) => {
+    if(newPeriod === period) return;
+
+    startTransition(async () => {
+      setPeriod(newPeriod);
+      await fetchOHLCData(newPeriod);
+    });
+  };
+
+  useEffect(() => {
+    const container = chartContainerRef.current;
+    if (!container) return;
+
+    const showTime = ['daily', 'weekly', 'monthly'].includes(period);
+
+    const chart = createChart(container, {
+      ...getChartConfig(height, showTime),
+      width: container.clientWidth,
+    });
+    const series = chart.addSeries(CandlestickSeries, getCandlestickConfig());
+  }, [height])
+
   return (
     <div id="candlestick-chart">
       <div className="chart-header">
@@ -20,11 +68,24 @@ const CandlestickChart = ({
 
         <div className="button-group">
           <span className="text-sm mx-2 font-medium text-purple-100/50">Period:</span>
-          <button key="1h" className="config-button" onClick={() => {}} disabled={loading}>
-            1 hour
-          </button>
+          {PERIOD_BUTTONS.map(({ value, label }) => (
+            <button
+              key={value}
+              className={period === value ? 'config-button-active' : 'config-button'}
+              onClick={() => handlePeriodChange(value)}
+              disabled={loading}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
+
+      <div
+        ref={chartContainerRef}
+        className="chart"
+        style={{ height }}
+      />
     </div>
   )
 }

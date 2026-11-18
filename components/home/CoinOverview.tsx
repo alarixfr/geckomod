@@ -10,12 +10,6 @@ const CoinOverview = async () => {
       await fetcher<CoinDetailsData>('/coins/bitcoin', {
         dex_pair_format: 'symbol'
       }),
-      await fetcher<OHLCData[]>('/coins/bitcoin/ohlc', {
-        vs_currency: 'usd',
-        days: 1,
-        interval: 'hourly',
-        precision: 'full',
-      }),
     ]);
 
     return (
