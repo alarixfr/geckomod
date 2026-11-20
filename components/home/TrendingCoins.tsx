@@ -43,13 +43,13 @@ const TrendingCoins = async () => {
                 className={cn('price-change', isTrendingUp ? 'text-green-500' : 'text-red-500'
                 )}
               >
-                <p>
-                {isTrendingUp ? (
+                <p className="flex items-center">
+                  {formatPercentage(item.data.price_change_percentage_24h.usd)}
+                  {isTrendingUp ? (
                     <TrendingUp width={16} height={16}/>
                     ) : (
                     <TrendingDown width={16} height={16}/>
                     )}
-                  {Math.abs(item.data.price_change_percentage_24h.usd).toFixed(2)}%
                 </p>
               </div>
             );
