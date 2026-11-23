@@ -1,16 +1,17 @@
 import React from 'react';
-import { fetcher } from '@/lib/coingecko.actions';
+import { fetcher, getPools } from '@/lib/coingecko.actions';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
-import { Converter } from '@/components/Converter';
+import Converter from '@/components/Converter';
+import LiveDataWrapper from '@/components/LiveDataWrapper';
 
 const Page = async ({ params }: NextPageProps) => {
   const { id } = await params;
 
-  const [coinData coinOHLCData] = await Promise.all([
+  const [coinData, coinOHLCData] = await Promise.all([
     fetcher<CoinDetailsData>(`/coins/${id}`, {
-      dex_pair_format: 'contact_address',
+      dex_pair_format: 'contract_address',
     }),
     fetcher<OHLCData>(`/coins/${id}/ohlc`, {
       vs_currency: 'usd',
@@ -59,7 +60,6 @@ const Page = async ({ params }: NextPageProps) => {
       value: '-',
       link: coinData.links.subreddit_url,
       linkText: "Community",
-      linkText: "Community",
     },
   ];
 
@@ -107,11 +107,9 @@ const Page = async ({ params }: NextPageProps) => {
             ))}
           </ul>
         </div>
-
-        <p>Top Gainers and Losers</p>
       </section>
     </main>
   )
 };
 
-export default Page:
+export default Page;

@@ -1,8 +1,16 @@
 'use client';
 
-import { useRef, useState, useTransition } from "react";
-import { PERIOD_BUTTONS } from "@/constants";
-import { IChartApi, ISeriesApi } from "lightweight-charts";
+import { useRef, useState, useEffect, useTransition } from "react";
+import { IChartApi, ISeriesApi, CandlestickSeries, createChart } from "lightweight-charts";
+import { fetcher } from '@/lib/coingecko.actions';
+import { convertOHLCData } from '@/lib/utils';
+import {
+  getCandlestickConfig,
+  getChartConfig,
+  LIVE_INTERVAL_BUTTONS,
+  PERIOD_BUTTONS,
+  PERIOD_CONFIG,
+} from '@/constants';
 
 const CandlestickChart = ({
   children,
@@ -15,7 +23,7 @@ const CandlestickChart = ({
   liveInterval,
   setLiveInterval,
 }: CandlestickChartProps) => {
-  const chartContainer = useRef<HTMLDivElement | null>(null);
+  const chartContainerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleSeriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const prevOhlcDataLength = useRef<number>(data?.length || 0);
@@ -28,7 +36,7 @@ const CandlestickChart = ({
     try {
       const { days, interval } = PERIOD_CONFIG[selectedPeriod];
       
-      const newData = await fetcher<OHLCData[]>('/coins/${coinId}/ohlc', {
+      const newData = await fetcher<OHLCData[]>(`/coins/${coinId}/ohlc`, {
         vs_currency: 'usd',
         days,
         interval,
@@ -47,7 +55,7 @@ const CandlestickChart = ({
     if(newPeriod === period) return;
     
     setPeriod(newPeriod);
-    await fetchOHLCData(newPeriod);
+    fetchOHLCData(newPeriod);
   };
 
   useEffect(() => {
@@ -63,7 +71,7 @@ const CandlestickChart = ({
     const series = chart.addSeries(CandlestickSeries, getCandlestickConfig());
 
     const convertedToSeconds = ohlcData.map(
-      (item) => [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as ohlcData,
+      (item) => [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as OHLCData,
     );
 
     series.setData(convertOHLCData(convertedToSeconds));
@@ -91,15 +99,15 @@ const CandlestickChart = ({
     if(!candleSeriesRef.current) return;
 
     const convertedToSeconds = ohlcData.map(
-      (item) => [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as ohlcData,
+      (item) => [Math.floor(item[0] / 1000), item[1], item[2], item[3], item[4]] as OHLCData,
     );
 
     let merged:  OHLCData[];
 
-    if (!liveOhlcv) {
+    if (liveOhlcv) {
       const liveTimestamp = liveOhlcv[0];
 
-      const lastHistoricalCandle = convertedToSeconds[convertedToSecond.length - 1];
+      const lastHistoricalCandle = convertedToSeconds[convertedToSeconds.length - 1];
 
       if (lastHistoricalCandle && lastHistoricalCandle[0] === liveTimestamp) {
         merged = [...convertedToSeconds.slice(0, -1), liveOhlcv];
@@ -107,7 +115,7 @@ const CandlestickChart = ({
         merged = [...convertedToSeconds, liveOhlcv];
       }
     } else {
-      merged = convertedToSecond;
+      merged = convertedToSeconds;
     }
 
     merged.sort((a, b) => a[0] - b[0]);

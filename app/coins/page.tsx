@@ -1,4 +1,3 @@
-import React from 'react';
 import { fetcher } from '@/lib/coingecko.actions';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,7 +18,7 @@ const Coins = async ({ searchParams }: NextPageProps) => {
     per_page: perPage,
     page: currentPage,
     sparkline: 'false',
-    prize_change_percentage: '24h',
+    price_change_percentage: '24h',
   });
 
   const columns: DataTableColumn<CoinMarketData>[] = [
@@ -36,19 +35,20 @@ const Coins = async ({ searchParams }: NextPageProps) => {
     {
       header: 'Token',
       cellClassName: 'token-cell',
-      cell: (coin) => {
+      cell: (coin) => (
         <div className="token-info">
           <Image src={coin.image} alt={coin.name} width={36} height={36} />
+          <p>{coin.name} ({coin.symbol.toUpperCase()})</p>
         </div>
-      }
+      )
     },
     {
       header: 'Price',
       cellClassName: 'price-cell',
-      cell: (coin) => formatCurrency(coin.current_price),
+      cell: (coin) => (formatCurrency(coin.current_price)),
     },
     {
-      header: '24h change',
+      header: '24h Change',
       cellClassName: 'change-cell',
       cell: (coin) => {
         const isTrendingUp = coin.price_change_percentage_24h > 0;

@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { cn, buildPageNumbers, ELLIPSIS } from '@/lib/utils';
 import {
   Pagination,
   PaginationContent,
@@ -31,26 +33,23 @@ const CoinsPagination = ({ currentPage, totalPages, hasMorePages } : Pagination 
         </PaginationItem>
 
         <div className="pagination-pages">
-          {pageNumbers.map(page, index) => (
+          {pageNumbers.map((page, index) => (
             <PaginationItem key={index}>
+              {page === ELLIPSIS ? (
                 <span className="ellipsis">...</span>
               ) : (
-                <paginationLink
-                  onClick>{() => handlePageChange(page)}
+                <PaginationLink
+                  onClick={() => handlePageChange(page)}
                   className={cn('page-link', {
                     'page-link-active': currentPage === page,
                   })}
                 >
                   {page}
-                </paginationLink>
+                </PaginationLink>
               )}
             </PaginationItem>
           ))}
         </div>
-        
-        <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
-        </PaginationItem>
         
         <PaginationItem className="pagination-control next">
           <PaginationNext

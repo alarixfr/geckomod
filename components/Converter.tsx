@@ -41,7 +41,7 @@ const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
         </div>
 
         <div className="divider">
-          <div className="link" />
+          <div className="line" />
 
           <Image
             src="/converter.svg"
@@ -62,11 +62,11 @@ const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
               </SelectValue>
             </SelectTrigger>
             <SelectContent className="select-content" data-converter>
-              {Object.keys{priceList}.map((currencyCode) => (
+              {Object.keys(priceList).map((currencyCode) => (
                 <SelectItem
                   value={currencyCode}
                   key={currencyCode}
-                  className={currencyCode}
+                  className="select-item"
                 >
                   {currencyCode.toUpperCase()}
                 </SelectItem>

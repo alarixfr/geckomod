@@ -10,7 +10,7 @@ import CoinHeader from '@/components/CoinHeader';
 
 const LiveDataWrapper = ({
   children,
-  coidId,
+  coinId,
   poolId,
   coin,
   coinOHLCData,
@@ -18,7 +18,7 @@ const LiveDataWrapper = ({
   const [liveInterval, setLiveInterval] = useState<'1s' | '1m'>('1s');
   const { trades, ohlcv, price } = useCoinGeckoWebSocket({ coinId, poolId, liveInterval });
 
-  const tradeColumns: DataTableColumn<Trade[]> = [
+  const tradeColumns: DataTableColumn<Trade>[] = [
     {
       header: 'Price',
       cellClassName: 'price-cell',

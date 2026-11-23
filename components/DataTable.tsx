@@ -1,14 +1,12 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-import React from 'react';
 import {cn} from "@/lib/utils";
 
 const DataTable = <T,>({
@@ -20,17 +18,17 @@ const DataTable = <T,>({
   headerCellClassName,
   bodyRowClassName,
   bodyCellClassName,
-  headerClassName 
+  headerClassName,
 }: DataTableProps<T>) => {
   return (
     <Table className={cn('custom-scrollbar', tableClassName)}>
       <TableHeader className={headerClassName}>
-        <TableRow className={cn('hover:bg-transparent', headerRowClassName)}>
-          {columns.map((column, i) => {
+        <TableRow className={cn('hover:bg-transparent!', headerRowClassName)}>
+          {columns.map((column, i) => (
             <TableHead key={i} className={cn('bg-dark-400 text-purple-100 py-4 first:pl-5 last:pr-5', headerCellClassName, column.headClassName)}>
               {column.header}
             </TableHead>
-          })}
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>

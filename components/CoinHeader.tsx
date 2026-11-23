@@ -1,6 +1,8 @@
-import { formatCurrency, formatPercentage } from '@/lib/utils';
 import Image from 'next/image';
-import { Badge } from "@/components/badge";
+import { cn } from '@/lib/utils';
+import { formatCurrency, formatPercentage } from '@/lib/utils';
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const CoinHeader = ({
   livePriceChangePercentage24h,
@@ -31,10 +33,10 @@ const CoinHeader = ({
     },
     {
       label: 'Price Change (24h)',
-      value: livePriceChangePercentage24h,
-      isUp: isTrendingUp,
-      formatter: formatPercentage,
-      showIcon: true,
+      value: priceChange24h,
+      isUp: isPriceChangeUp,
+      formatter: formatCurrency,
+      showIcon: false,
     },
   ];
   
@@ -48,7 +50,7 @@ const CoinHeader = ({
         <div className="price-row">
           <h1>{formatCurrency(livePrice)}</h1>
           <Badge className={cn('badge', isTrendingUp ? 'badge-up' : 'badge-down')}>
-            {formatPercentage(livePriceChangePercentage24h4)}
+            {formatPercentage(livePriceChangePercentage24h)}
             {isTrendingUp ? <TrendingUp /> : <TrendingDown />}
             (24h)
           </Badge>
@@ -56,14 +58,14 @@ const CoinHeader = ({
       </div>
 
       <ul className="stats">
-        {stats.map(stat) => (
+        {stats.map((stat) => (
           <li key={stat.label}>
             <p className="label">{stat.label}</p>
 
             <div
               className={cn('value', {
                 'text-green-500': stat.isUp,
-                'text.red-500': !stat.isUp,
+                'text-red-500': !stat.isUp,
               })}
             >
               <p>{stat.formatter(stat.value)}</p>
