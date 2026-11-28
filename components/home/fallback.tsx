@@ -1,14 +1,15 @@
 import React from "react";
-import { cn } from "@/lib/utils";
 import DataTable from "@/components/DataTable";
+
+type FallbackRow = { id: number};
 
 export const CoinOverviewFallback = () => {
   return (
     <div id="coin-overview-fallback">
       <div className="header pt-2">
-        <div className="header-image skeleton"/>
+        <div className="header-image skeleton" />
         <div className="info">
-          <div className="header-line-sm skeleton"/>
+          <div className="header-line-sm skeleton" />
           <div className="header-line-lg skeleton" />
         </div>
       </div>
@@ -16,13 +17,13 @@ export const CoinOverviewFallback = () => {
         <div className="chart-skeleton skeleton" />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const TrendingCoinsFallback = () => {
   const columns = [
     {
-      header: 'Name',
+      header: "Name",
       cell: () => (
         <div className="name-link">
           <div className="name-image skeleton" />
@@ -31,7 +32,7 @@ export const TrendingCoinsFallback = () => {
       ),
     },
     {
-      header: '24h Change',
+      header: "24h Change",
       cell: () => (
         <div className="price-change">
           <div className="change-icon skeleton" />
@@ -40,20 +41,20 @@ export const TrendingCoinsFallback = () => {
       ),
     },
     {
-      header: 'Price',
+      header: "Price",
       cell: () => <div className="price-line skeleton" />,
     },
   ];
 
-  const dummyData = Array.from({ length: 6}, (_, i) => ({ id: i}));
+  const dummyData = Array.from({ length: 6 }, (_, i) => ({ id: i }));
 
   return (
     <div id="trending-coins-fallback">
       <h4>Trending Coins</h4>
       <DataTable
         data={dummyData}
-        columns={columns as any}
-        rowKey={(item: any) => item.id}
+        columns={columns}
+        rowKey={(item: FallbackRow) => item.id}
         tableClassName="trending-coins-table"
       />
     </div>
@@ -61,15 +62,15 @@ export const TrendingCoinsFallback = () => {
 };
 
 export const CategoriesFallback = () => {
-  const columns = [
+  const columns: DataTableColumn<FallbackRow>[] = [
     {
-      header: 'Category',
-      cellClassName: 'category-cell',
-      cell: () => <div className="category-line skeleton" />
+      header: "Category",
+      cellClassName: "category-cell",
+      cell: () => <div className="category-line skeleton" />,
     },
     {
-      header: 'Top Gainers',
-      cellClassName: 'top-gainers-cell',
+      header: "Top Gainers",
+      cellClassName: "top-gainers-cell",
       cell: () => (
         <div className="flex gap-1">
           <div className="gainer-image skeleton" />
@@ -79,8 +80,8 @@ export const CategoriesFallback = () => {
       ),
     },
     {
-      header: '24h Change',
-      cellClassName: 'change-header-cell',
+      header: "24h Change",
+      cellClassName: "change-header-cell",
       cell: () => (
         <div className="change-cell">
           <div className="change-icon skeleton" />
@@ -89,14 +90,14 @@ export const CategoriesFallback = () => {
       ),
     },
     {
-      header: 'Market Cap',
-      cellClassName: 'market-cap-cell',
-      cell: () => <div className="value-skeleton-lg skeleton" />
+      header: "Market Cap",
+      cellClassName: "market-cap-cell",
+      cell: () => <div className="value-skeleton-lg skeleton" />,
     },
     {
       header: "24h Volume",
-      cellClassName: 'volume-cell',
-      cell: () => <div className="value-skeleton-md skeleton" />
+      cellClassName: "volume-cell",
+      cell: () => <div className="value-skeleton-md skeleton" />,
     },
   ];
 
@@ -107,8 +108,8 @@ export const CategoriesFallback = () => {
       <h4>Top Categories</h4>
       <DataTable
         data={dummyData}
-        columns={columns as any}
-        rowKey={(item: any) => item.id}
+        columns={columns}
+        rowKey={(item: FallbackRow) => item.id}
         tableClassName="mt-3"
       />
     </div>

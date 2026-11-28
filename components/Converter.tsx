@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import { formatCurrency } from '@/lib/utils';
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { formatCurrency } from "@/lib/utils";
 
 import {
   Select,
@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/select";
 
 const Converter = ({ symbol, icon, priceList }: ConverterProps) => {
-  const [currency, setCurrency] = useState('usd');
-  const [amount, setAmount] = useState('10');
+  const [currency, setCurrency] = useState("usd");
+  const [amount, setAmount] = useState("10");
 
   const convertedPrice = (parseFloat(amount) || 0) * (priceList[currency] || 0);
 

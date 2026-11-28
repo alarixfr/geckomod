@@ -77,7 +77,7 @@ const CoinHeader = ({
                 ))}
             </div>
           </li>
-        )}
+        ))}
       </ul>
     </div>
   )

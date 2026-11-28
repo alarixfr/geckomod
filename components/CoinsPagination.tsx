@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { cn, buildPageNumbers, ELLIPSIS } from '@/lib/utils';
+import { useRouter } from "next/navigation";
+import { cn, buildPageNumbers, ELLIPSIS } from "@/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -10,9 +10,13 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from '@/components/ui/pagination'
+} from "@/components/ui/pagination";
 
-const CoinsPagination = ({ currentPage, totalPages, hasMorePages } : Pagination ) => {
+const CoinsPagination = ({
+  currentPage,
+  totalPages,
+  hasMorePages,
+}: Pagination) => {
   const router = useRouter();
 
   const handlePageChange = (page: number) => {
@@ -21,14 +25,16 @@ const CoinsPagination = ({ currentPage, totalPages, hasMorePages } : Pagination 
 
   const pageNumbers = buildPageNumbers(currentPage, totalPages);
   const isLastPage = !hasMorePages || currentPage === totalPages;
-  
+
   return (
     <Pagination id="coins-pagination">
       <PaginationContent className="pagination-content">
         <PaginationItem className="pagination-control prev">
           <PaginationPrevious
             onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-            className={currentPage === 1 ? 'control-disabled' : 'control-button'}
+            className={
+              currentPage === 1 ? "control-disabled" : "control-button"
+            }
           />
         </PaginationItem>
 
@@ -40,8 +46,8 @@ const CoinsPagination = ({ currentPage, totalPages, hasMorePages } : Pagination 
               ) : (
                 <PaginationLink
                   onClick={() => handlePageChange(page)}
-                  className={cn('page-link', {
-                    'page-link-active': currentPage === page,
+                  className={cn("page-link", {
+                    "page-link-active": currentPage === page,
                   })}
                 >
                   {page}
@@ -50,11 +56,11 @@ const CoinsPagination = ({ currentPage, totalPages, hasMorePages } : Pagination 
             </PaginationItem>
           ))}
         </div>
-        
+
         <PaginationItem className="pagination-control next">
           <PaginationNext
             onClick={() => !isLastPage && handlePageChange(currentPage + 1)}
-            className={isLastPage ? 'control-disabled' : 'control-button'}
+            className={isLastPage ? "control-disabled" : "control-button"}
           />
         </PaginationItem>
       </PaginationContent>

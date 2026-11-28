@@ -15,14 +15,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "GeckoMod",
-  description: "Custom crypto trading terminal build on top of CoinGecko API using Nextjs",
+  description:
+    "Custom crypto trading terminal build on top of CoinGecko API using Nextjs",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className="dark">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Header />
         {children}
       </body>

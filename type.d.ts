@@ -11,10 +11,10 @@ interface CandlestickChartProps {
   coinId: string;
   height?: number;
   children?: React.ReactNode;
-  mode?: 'historical' | 'live';
+  mode?: "historical" | "live";
   initialPeriod?: Period;
-  liveInterval: '1s' | '1m';
-  setLiveInterval: (interval: '1s' | '1m') => void;
+  liveInterval?: "1s" | "1m";
+  setLiveInterval?: (interval: "1s" | "1m") => void;
 }
 
 interface ConverterProps {
@@ -36,7 +36,8 @@ interface Ticker {
   trade_url: string;
 }
 
-type Period = 'daily' | 'weekly' | 'monthly' | '3months' | '6months' | 'yearly' | 'max';
+type Period =
+  "daily" | "weekly" | "monthly" | "3months" | "6months" | "yearly" | "max";
 
 interface CoinMarketData {
   id: string;
@@ -228,6 +229,7 @@ interface LiveDataProps {
   coin: CoinDetailsData;
   coinOHLCData?: OHLCData[];
   children?: React.ReactNode;
+  isPro?: boolean;
 }
 
 interface LiveCoinHeaderProps {
@@ -250,7 +252,8 @@ interface Category {
 interface UseCoinGeckoWebSocketProps {
   coinId: string;
   poolId: string;
-  liveInterval?: '1s' | '1m';
+  liveInterval?: "1s" | "1m";
+  enabled?: boolean;
 }
 
 interface UseCoinGeckoWebSocketReturn {
@@ -279,12 +282,12 @@ interface DataTableProps<T> {
   bodyCellClassName?: string;
 }
 
-type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg';
+type ButtonSize = "default" | "sm" | "lg" | "icon" | "icon-sm" | "icon-lg";
 
 type PaginationLinkProps = {
   isActive?: boolean;
   size?: ButtonSize;
-} & React.ComponentProps<'a'>;
+} & React.ComponentProps<"a">;
 
 interface Pagination {
   currentPage: number;
@@ -296,7 +299,7 @@ interface HeaderProps {
   trendingCoins: TrendingCoin[];
 }
 
-type SearchItemCoin = SearchCoin | TrendingCoin['item'];
+type SearchItemCoin = SearchCoin | TrendingCoin["item"];
 
 interface SearchItemProps {
   coin: SearchItemCoin;

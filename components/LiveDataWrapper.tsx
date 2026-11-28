@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { Separator } from '@/components/ui/separator';
-import CandlestickChart from '@/components/CandlestickChart';
-import { useCoinGeckoWebSocket } from '@/hooks/useCoinGeckoWebSocket';
-import DataTable from '@/components/DataTable';
-import { formatCurrency, timeAgo } from '@/lib/utils';
-import { useState } from 'react';
-import CoinHeader from '@/components/CoinHeader';
+import { Separator } from "@/components/ui/separator";
+import CandlestickChart from "@/components/CandlestickChart";
+import { useCoinGeckoWebSocket } from "@/hooks/useCoinGeckoWebSocket";
+import { useFreeCoinData } from "@/hooks/useFreeCoinData";
+import DataTable from "@/components/DataTable";
+import { formatCurrency, timeAgo } from "@/lib/utils";
+import { useState } from "react";
+import CoinHeader from "@/components/CoinHeader";
 
 const LiveDataWrapper = ({
   children,
@@ -14,42 +15,52 @@ const LiveDataWrapper = ({
   poolId,
   coin,
   coinOHLCData,
+  isPro = false,
 }: LiveDataProps) => {
-  const [liveInterval, setLiveInterval] = useState<'1s' | '1m'>('1s');
-  const { trades, ohlcv, price } = useCoinGeckoWebSocket({ coinId, poolId, liveInterval });
+  const [liveInterval, setLiveInterval] = useState<"1s" | "1m">("1s");
+  const proData = useCoinGeckoWebSocket({
+    coinId,
+    poolId,
+    liveInterval,
+    enabled: isPro,
+  });
+  const freeData = useFreeCoinData({ coinId, enabled: !isPro });
+  const { trades, ohlcv, price } = isPro ? proData : freeData;
 
   const tradeColumns: DataTableColumn<Trade>[] = [
     {
-      header: 'Price',
-      cellClassName: 'price-cell',
-      cell: (trade) => (trade.price ? formatCurrency(trade.price) : '-'),
+      header: "Price",
+      cellClassName: "price-cell",
+      cell: (trade) => (trade.price ? formatCurrency(trade.price) : "-"),
     },
     {
-      header: 'Amount',
-      cellClassName: 'amount-cell',
-      cell: (trade) => trade.amount?.toFixed(4) ?? '-',
+      header: "Amount",
+      cellClassName: "amount-cell",
+      cell: (trade) => trade.amount?.toFixed(4) ?? "-",
     },
     {
-      header: 'Value',
-      cellClassName: 'value-cell',
-      cell: (trade) => (trade.value ? formatCurrency(trade.value) : '-'),
+      header: "Value",
+      cellClassName: "value-cell",
+      cell: (trade) => (trade.value ? formatCurrency(trade.value) : "-"),
     },
     {
-      header: 'Buy/Sell',
-      cellClassName: 'type-cell',
+      header: "Buy/Sell",
+      cellClassName: "type-cell",
       cell: (trade) => (
-        <span className={trade.type === 'b' ? 'text-green-500' : 'text-red-500' }>
-          {trade.type === 'b' ? 'Buy' : 'Sell'}
+        <span
+          className={trade.type === "b" ? "text-green-500" : "text-red-500"}
+        >
+          {trade.type === "b" ? "Buy" : "Sell"}
         </span>
       ),
     },
     {
-      header: 'Time',
-      cellClassName: 'time-cell',
-      cell: (trade) => (trade.timestamp ? timeAgo(trade.timestamp) : '-'),
+      header: "Time",
+      cellClassName: "time-cell",
+      cell: (trade) => (trade.timestamp ? timeAgo(trade.timestamp) : "-"),
     },
   ];
-  
+
   return (
     <section id="live-data-wrapper">
       <CoinHeader
@@ -57,9 +68,12 @@ const LiveDataWrapper = ({
         image={coin.image.large}
         livePrice={price?.usd ?? coin.market_data.current_price.usd}
         livePriceChangePercentage24h={
-          price?.change24h ?? coin.market_data.price_change_percentage_24h_in_currency.usd
+          price?.change24h ??
+          coin.market_data.price_change_percentage_24h_in_currency.usd
         }
-        priceChangePercentage30d={coin.market_data.price_change_percentage_30d_in_currency.usd}
+        priceChangePercentage30d={
+          coin.market_data.price_change_percentage_30d_in_currency.usd
+        }
         priceChange24h={coin.market_data.price_change_24h_in_currency.usd}
       />
       <Separator className="divider" />
@@ -80,7 +94,7 @@ const LiveDataWrapper = ({
 
       <Separator className="divider" />
 
-      {tradeColumns && (
+      {isPro ? (
         <div className="trades">
           <h4>Recent Trades</h4>
 
@@ -90,6 +104,14 @@ const LiveDataWrapper = ({
             rowKey={(_, index) => index}
             tableClassName="trades-table"
           />
+        </div>
+      ) : (
+        <div className="trades">
+          <h4>Recent Trades</h4>
+          <p>
+            Recent Trades are available in Pro mode only, current API key is
+            free demo
+          </p>
         </div>
       )}
     </section>
